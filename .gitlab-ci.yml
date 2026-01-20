@@ -4,7 +4,7 @@
 
 include:
   - project: tomshley/breakground-provisioning
-    ref: v0.62.4
+    ref: v0.62.5
     file:
       - ci/gitlab/templates/.container-tags.yml
       - ci/gitlab/templates/.stages-base.yml
