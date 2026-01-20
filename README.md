@@ -139,6 +139,27 @@ Bake targets are the authoritative build identities; image tags are aliases of t
 
 ---
 
+## Internal CI/CD Templates
+
+This project provides reusable GitLab CI templates intended to be consumed by downstream projects.
+
+Key behaviors:
+
+- **Merge Requests**
+  - Image push jobs are automatically skipped to avoid blocking MR pipelines.
+- **Credentials**
+  - CI-provided registry credentials are preferred by default.
+  - Local or developer credentials are only used outside CI.
+- **Tagging**
+  - Images are tagged immutably using commit-derived identifiers.
+  - Feature and non-release refs do not publish registry aliases.
+- **Manual Jobs**
+  - Manual container-push steps exist only for release flows and are not required for validation pipelines.
+
+These behaviors are intentional and designed to minimize friction while preserving release safety.
+
+---
+
 ## Versioning
 
 A top‑level `VERSION` file is the single source of truth for project release metadata.
@@ -173,10 +194,9 @@ Apache License 2.0. See LICENSE and NOTICE.md.
 Maintained by Tomshley LLC.
 Tomshley and the Tomshley logo are trademarks of Tomshley LLC.
 
-
 ---
 
-## CI / CD (GitLab)
+## CI/CD (GitLab)
 
 This repository uses a **minimal, intentional GitLab CI/CD setup** designed to
 support reproducible container builds while validating shared CI abstractions
@@ -252,4 +272,3 @@ changing the CI structure:
 - Custom runner images
 
 ---
-
