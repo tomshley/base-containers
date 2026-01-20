@@ -7,14 +7,14 @@ FROM --platform=$BUILDPLATFORM from_image_build_ref
 ENV LANG=C.UTF-8
 
 # ---- Artifact identity (Docker CLI, upstream static) ----
-ARG DOCKER_VERSION="29.0.1"
+ARG DOCKER_VERSION="29.1.5"
 
 ARG DOCKER_X64_FILE="docker-${DOCKER_VERSION}.tgz"
 ARG DOCKER_ARM64_FILE="docker-${DOCKER_VERSION}.tgz"
 
 # ---- Upstream-published SHA256 checksums ----
-ARG DOCKER_X64_SHA256="db22bdfb32820540fa7ffedf5e0f3157e238c53be485103b71f083f5580f45a5"
-ARG DOCKER_ARM64_SHA256="c5ebae5a51a273aa40141b08157a18950525c1204888a01fa34dac0f45eb17e8"
+ARG DOCKER_X64_SHA256="882bb03f3fd36ad565b1362f5bbb5d5af5f2410a5c10cae3f9d3d54e2540adc2"
+ARG DOCKER_ARM64_SHA256="c07ed6ce22375c4ba24cca554dc99cbc31ab2da24d893a5f2d4bd1854e8eaadd"
 
 # ---- Bring vendored artifacts in ----
 COPY files/x86_64/${DOCKER_X64_FILE} /tmp/docker-x64.tgz
