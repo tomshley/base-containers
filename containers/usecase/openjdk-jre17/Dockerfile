@@ -16,7 +16,7 @@ RUN jlink \
     --compress=2 \
     --output /javaruntime
 
-FROM --platform=$BUILDPLATFORM from_image_build_ref-base-alpine-3_19-upstream
+FROM --platform=$BUILDPLATFORM from_image_build_ref-base-alpine-3_23-upstream
 
 ENV JAVA_HOME=/opt/java/javaruntime
 ENV PATH="${JAVA_HOME}/bin:${PATH}"

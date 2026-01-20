@@ -37,7 +37,7 @@ variable "BASE_CONTAINERS_IMAGE_BASE" {
 
 group "base" {
   targets = [
-    "base-alpine-3_19-upstream",
+    "base-alpine-3_23-upstream",
     "base-alpine-edge-upstream"
   ]
 }
@@ -78,7 +78,7 @@ group "experimental" {
 
 group "default" {
   targets = [
-    "base-alpine-3_19-upstream",
+    "base-alpine-3_23-upstream",
     "base-alpine-edge-upstream",
 
     "foundation-runtime-java-17-jdk-openjdk-upstream",
@@ -109,13 +109,13 @@ target "common" {
 
 #region Base images
 
-target "base-alpine-3_19-upstream" {
+target "base-alpine-3_23-upstream" {
   inherits = ["common"]
-  context  = "containers/base/alpine/3.19/upstream"
+  context  = "containers/base/alpine/3.23/upstream"
 
   tags = [
-    "${BASE_CONTAINERS_IMAGE_BASE}/base-alpine-3_19-upstream:${BASE_CONTAINERS_TAG}",
-    "${BASE_CONTAINERS_IMAGE_BASE}/base-alpine-3_19-upstream:${BASE_CONTAINERS_TAG_LATEST}"
+    "${BASE_CONTAINERS_IMAGE_BASE}/base-alpine-3_23-upstream:${BASE_CONTAINERS_TAG}",
+    "${BASE_CONTAINERS_IMAGE_BASE}/base-alpine-3_23-upstream:${BASE_CONTAINERS_TAG_LATEST}"
   ]
 }
 
@@ -138,10 +138,10 @@ target "base-alpine-edge-upstream" {
 target "foundation-runtime-java-17-jdk-openjdk-upstream" {
   inherits   = ["common"]
   context    = "containers/foundation/runtime/java/17/jdk/openjdk/upstream"
-  depends_on = ["base-alpine-3_19-upstream"]
+  depends_on = ["base-alpine-3_23-upstream"]
 
   contexts = {
-    from_image_build_ref = "target:base-alpine-3_19-upstream"
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
   }
 
   tags = [
@@ -153,10 +153,10 @@ target "foundation-runtime-java-17-jdk-openjdk-upstream" {
 target "foundation-runtime-java-17-jdk-zulu-musl-vendored" {
   inherits   = ["common"]
   context    = "containers/foundation/runtime/java/17/jdk/zulu/musl/vendored"
-  depends_on = ["base-alpine-3_19-upstream"]
+  depends_on = ["base-alpine-3_23-upstream"]
 
   contexts = {
-    from_image_build_ref = "target:base-alpine-3_19-upstream"
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
   }
 
   tags = [
@@ -170,10 +170,10 @@ target "foundation-runtime-java-17-jdk-zulu-musl-vendored" {
 target "foundation-runtime-python-3_12-upstream" {
   inherits   = ["common"]
   context    = "containers/foundation/runtime/python/3.12/upstream"
-  depends_on = ["base-alpine-3_19-upstream"]
+  depends_on = ["base-alpine-3_23-upstream"]
 
   contexts = {
-    from_image_build_ref = "target:base-alpine-3_19-upstream"
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
   }
 
   tags = [
@@ -190,10 +190,10 @@ target "foundation-runtime-python-3_12-upstream" {
 target "entry-docker-cli-29-vendored" {
   inherits   = ["common"]
   context    = "containers/entry/docker-cli/29/vendored"
-  depends_on = ["base-alpine-3_19-upstream"]
+  depends_on = ["base-alpine-3_23-upstream"]
 
   contexts = {
-    from_image_build_ref = "target:base-alpine-3_19-upstream"
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
   }
 
   tags = [
@@ -205,10 +205,10 @@ target "entry-docker-cli-29-vendored" {
 target "entry-gcloud-479_0_0-vendored" {
   inherits   = ["common"]
   context    = "containers/entry/gcloud/479.0.0/vendored"
-  depends_on = ["base-alpine-3_19-upstream"]
+  depends_on = ["base-alpine-3_23-upstream"]
 
   contexts = {
-    from_image_build_ref = "target:base-alpine-3_19-upstream"
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
   }
 
   tags = [
@@ -220,10 +220,10 @@ target "entry-gcloud-479_0_0-vendored" {
 target "entry-opentofu-1_11-vendored" {
   inherits   = ["common"]
   context    = "containers/entry/opentofu/1.11/vendored"
-  depends_on = ["base-alpine-3_19-upstream"]
+  depends_on = ["base-alpine-3_23-upstream"]
 
   contexts = {
-    from_image_build_ref = "target:base-alpine-3_19-upstream"
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
   }
 
   tags = [
@@ -235,10 +235,10 @@ target "entry-opentofu-1_11-vendored" {
 target "entry-terraform-1_11-upstream" {
   inherits   = ["common"]
   context    = "containers/entry/terraform/1.11/vendored"
-  depends_on = ["base-alpine-3_19-upstream"]
+  depends_on = ["base-alpine-3_23-upstream"]
 
   contexts = {
-    from_image_build_ref = "target:base-alpine-3_19-upstream"
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
   }
 
   tags = [
@@ -255,12 +255,12 @@ target "usecase-openjdk-jre17" {
   inherits   = ["common"]
   context    = "containers/usecase/openjdk-jre17"
   depends_on = [
-    "base-alpine-3_19-upstream",
+    "base-alpine-3_23-upstream",
     "foundation-runtime-java-17-jdk-openjdk-upstream"
   ]
 
   contexts = {
-    from_image_build_ref-base-alpine-3_19-upstream = "target:base-alpine-3_19-upstream"
+    from_image_build_ref-base-alpine-3_23-upstream = "target:base-alpine-3_23-upstream"
     from_image_build_ref-foundation-runtime-java-17-jdk-openjdk-upstream = "target:foundation-runtime-java-17-jdk-openjdk-upstream"
   }
 
@@ -292,10 +292,10 @@ target "usecase-akka-http-jre17" {
 target "daemon-docker-29-dind-rootless-vendored" {
   inherits   = ["common"]
   context    = "containers/daemon/docker/29/dind-rootless/vendored"
-  depends_on = ["base-alpine-3_19-upstream"]
+  depends_on = ["base-alpine-3_23-upstream"]
 
   contexts = {
-    from_image_build_ref = "target:base-alpine-3_19-upstream"
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
   }
 
   tags = [
