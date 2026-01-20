@@ -20,3 +20,21 @@ This project follows Semantic Versioning.
 - NOTICE, LICENSE, and OSS documentation
 - Brand and metadata placeholders
 
+---
+
+## v0.2.0
+
+### Added
+- GitLab CI/CD pipeline definition with Breakground template composition.
+- Shared CI template for deterministic container tag resolution (tag vs branch/MR semantics).
+- Idempotent Buildx builder creation target (`make createbuildx`).
+
+### Changed
+- Alpine base image updated from 3.19 to 3.23 across bake targets, base images, and examples.
+- Docker toolchain pinned to 29.1.5 (Docker CLI vendored + DinD/rootless daemon).
+- Registry authentication behavior: CI-provided credentials are authoritative; local defaults are optional.
+- `make push` no longer enforces a registry login pre-check (CI handles auth; local use remains flexible).
+
+### Fixed
+- OpenTofu ARM64 artifact naming and checksum alignment (`*_arm64.apk`).
+- Documentation updated to describe CI/CD structure and secret `.env` handling without release “highlights”.

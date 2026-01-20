@@ -117,17 +117,28 @@ check:
 	@command -v docker >/dev/null || { echo "docker not found"; exit 1; }
 	@docker buildx version >/dev/null || { echo "docker buildx not available"; exit 1; }
 
-.PHONY: login-check
-login-check:
-	@echo "Checking registry login for $(BASE_CONTAINERS_REGISTRY)…"
-	@docker buildx imagetools inspect \
-		$(BASE_CONTAINERS_REGISTRY)/$(BASE_CONTAINERS_NAMESPACE)/$(BASE_CONTAINERS_PROJECT):login-check \
-		>/dev/null 2>&1 || { \
-		echo "❌ Not logged in or insufficient permissions for $(BASE_CONTAINERS_REGISTRY)"; \
-		echo "   Run: docker login $(BASE_CONTAINERS_REGISTRY)"; \
-		exit 1; }
-	@echo "✅ Registry login OK"
 #endregion Checks
+
+#region BuildX
+# ------------------------------------------------------------------------------
+# BuildX
+# ------------------------------------------------------------------------------
+
+.PHONY: createbuildx
+
+BUILDX_NAME := tomshley_base_containers_buildx
+
+createbuildx:
+	@echo "=== Create Buildx Builder ==="
+	@docker buildx inspect $(BUILDX_NAME) >/dev/null 2>&1 || \
+	  docker buildx create \
+	    --name $(BUILDX_NAME) \
+	    --driver docker-container \
+	    --use
+	@docker buildx inspect $(BUILDX_NAME) --bootstrap
+	@echo "✅ Buildx builder ready: $(BUILDX_NAME)"
+
+#endregion BuildX
 
 #region Build targets
 # ------------------------------------------------------------------------------
@@ -139,7 +150,7 @@ build: check
 	docker buildx bake default
 
 .PHONY: push
-push: check login-check
+push: check
 	docker buildx bake default --push
 
 .PHONY: build-experimental
