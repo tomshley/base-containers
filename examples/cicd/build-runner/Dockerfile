@@ -8,7 +8,7 @@ FROM entry-docker-cli-29-vendored AS docker
 FROM docker/buildx-bin:0.13.1 AS buildx
 
 # ---- Final runner image ----
-FROM base-alpine-3_19-upstream
+FROM base-alpine-3_23-upstream
 
 # Docker CLI
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
