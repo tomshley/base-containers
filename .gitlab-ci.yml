@@ -1,0 +1,98 @@
+# Copyright (c) 2024–2026 Tomshley
+#
+# Licensed under the Apache License, Version 2.0
+
+include:
+  - project: tomshley/breakground-provisioning
+    ref: v0.62.4
+    file:
+      - ci/gitlab/templates/.container-tags.yml
+      - ci/gitlab/templates/.stages-base.yml
+      - ci/gitlab/templates/.gitflow-base.yml
+      - ci/gitlab/templates/.artifact-publish-policy.yml
+
+
+#region Container Runtime (base-containers specific)
+.tomshley-base-containers-runtime:
+  extends:
+    - .before-container-tags
+
+  image: docker:29.1.5-alpine3.23
+  services:
+    - name: docker:29.1.5-dind-alpine3.23
+      alias: docker
+
+  tags:
+    - saas-linux-xlarge-amd64
+
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+
+    # --- CI-native overrides (win over .env) ---
+    BASE_CONTAINERS_REGISTRY: "$CI_REGISTRY"
+    BASE_CONTAINERS_NAMESPACE: "$CI_PROJECT_NAMESPACE"
+    BASE_CONTAINERS_PROJECT: "$CI_PROJECT_NAME"
+    BASE_CONTAINERS_PLATFORMS: "linux/amd64,linux/arm64"
+
+  before_script:
+    # IMPORTANT:
+    # GitLab does NOT merge before_script on extends.
+    # We must explicitly reference the parent.
+    - !reference [.before-container-tags, before_script]
+
+    # Tooling
+    - apk add --no-cache make git-lfs
+    - git lfs status
+
+    # Load shared .env defaults (CI variables override)
+    - |
+      if [ -f ".secure-files/.env" ]; then
+        echo "Loading .env defaults (CI overrides enabled)"
+        while IFS='=' read -r key value; do
+          [ -z "$key" ] && continue
+          case "$key" in \#*) continue ;; esac
+          if [ -z "${!key+x}" ]; then
+            export "$key=$value"
+          fi
+        done < .secure-files/.env
+      fi
+
+    # Docker login (CI credentials are authoritative)
+    - |
+      if [ -n "$CI_REGISTRY_USER" ] && [ -n "$CI_REGISTRY_PASSWORD" ]; then
+        echo "Logging in using GitLab CI credentials"
+        docker login \
+          -u "$CI_REGISTRY_USER" \
+          -p "$CI_REGISTRY_PASSWORD" \
+          "$CI_REGISTRY"
+      else
+        echo "CI registry credentials not available; skipping docker login"
+      fi
+
+    # Buildx setup (idempotent)
+    - make createbuildx
+#endregion
+
+
+#region Load / Build (non-publishing)
+load:
+  stage: build
+  extends:
+    - .tomshley-breakground-bootstrap
+    - .tomshley-base-containers-runtime
+  script:
+    - echo "=== LOAD BASE CONTAINERS ==="
+    - make build-load
+#endregion
+
+
+#region Publish immutable artifact (containers)
+publish-containers:
+  extends:
+    - .flow-artifact-publish
+    - .tomshley-breakground-bootstrap
+    - .tomshley-base-containers-runtime
+  script:
+    - echo "=== PUBLISH CONTAINER IMAGES ==="
+    - make push
+#endregion

@@ -172,3 +172,84 @@ Apache License 2.0. See LICENSE and NOTICE.md.
 
 Maintained by Tomshley LLC.
 Tomshley and the Tomshley logo are trademarks of Tomshley LLC.
+
+
+---
+
+## CI / CD (GitLab)
+
+This repository uses a **minimal, intentional GitLab CI/CD setup** designed to
+support reproducible container builds while validating shared CI abstractions
+from the *Breakground* project.
+
+### Design Goals
+
+- Keep CI logic **boring and explicit**
+- Avoid CI-only artifacts or hidden build steps
+- Treat the container registry as the artifact boundary
+- Reuse generic Git Flow and stage definitions without coupling build logic
+
+### CI Structure
+
+The pipeline composes two generic templates provided by Breakground:
+
+- **`.stages-base.yml`**
+  - Defines the global stage layout (`build`, `deploy`, etc.)
+  - Does not define jobs or tools
+
+- **`.gitflow-base.yml`**
+  - Derives Git Flow context (feature, release, hotfix, tag)
+  - Computes an immutable build revision
+  - Provides manual flow hooks
+
+This repository then supplies **only the container-specific implementation**.
+
+### Active Jobs
+
+Currently, only two jobs are defined:
+
+- **load** (`build` stage)
+  - Runs `make build-load`
+  - Builds and loads supported images locally
+  - Does not publish artifacts
+
+- **push** (`deploy` stage, manual, tag-gated)
+  - Runs `make push`
+  - Publishes supported and experimental images to the registry
+
+Additional stages (validate, test, security, etc.) are intentionally present but unused.
+
+### Runtime Environment
+
+- **Job image:** `docker:29.1.5-alpine3.23`
+- **DinD service:** `docker:29.1.5-dind-alpine3.23`
+- **Runner:** `saas-linux-xlarge-amd64`
+
+> Note: Docker does not publish `*-dind-alpine` tags.  
+> The DinD image is already Alpine-based and must use `*-dind`.
+
+### Secrets Handling
+
+A GitLab **secure file** named `.env` may be provided.
+
+- GitLab exposes the file as a temporary path via the `ENV` variable
+- CI copies it to `.secure-files/.env`
+- The Makefile conditionally loads and exports it if present
+
+This keeps secret handling:
+- out of CI logic
+- consistent with local builds
+- compatible with air‑gapped environments
+
+### Intentional Omissions
+
+The following are **explicitly deferred** and may be added later without
+changing the CI structure:
+
+- Test jobs
+- Security scanning
+- Performance or e2e testing
+- Custom runner images
+
+---
+
