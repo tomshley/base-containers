@@ -8,7 +8,7 @@
 FROM --platform=$BUILDPLATFORM from_image_build_ref
 
 # ---- Versions (pin explicitly) ----
-ENV DOCKER_VERSION=29.1.4
+ENV DOCKER_VERSION=29.1.5
 ENV BUILDX_VERSION=0.30.1
 ENV COMPOSE_VERSION=5.0.1
 

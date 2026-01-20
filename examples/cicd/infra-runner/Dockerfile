@@ -11,7 +11,7 @@ FROM entry-terraform-1_11-upstream AS terraform
 FROM entry-gcloud-479_0_0-vendored AS gcloud
 
 # ---- Final runner ----
-FROM base-alpine-3_19-upstream
+FROM base-alpine-3_23-upstream
 
 # OpenTofu
 COPY --from=tofu /usr/local/bin/tofu /usr/local/bin/tofu
