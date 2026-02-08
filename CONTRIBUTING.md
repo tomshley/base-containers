@@ -32,7 +32,7 @@ Changes that increase complexity, size, or scope without strong justification ar
 
 1. Open an issue describing the change
 2. Fork the repository
-3. Create a focused pull request
+3. Create a focused merge request
 4. Keep commits clean and scoped
 
 Tomshley LLC reserves final decision-making authority on all contributions.
