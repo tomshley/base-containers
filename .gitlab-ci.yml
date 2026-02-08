@@ -4,7 +4,7 @@
 
 include:
   - project: tomshley/breakground-provisioning
-    ref: v0.62.5
+    ref: v0.62.7
     file:
       - ci/gitlab/templates/.container-tags.yml
       - ci/gitlab/templates/.stages-base.yml
@@ -37,15 +37,6 @@ include:
     # GitLab does NOT merge before_script on extends.
     # We must explicitly reference the parent.
     - !reference [.before-container-tags, before_script]
-
-    # Normalize version ONLY for tag pipelines:
-    # - Git tags may be vX.Y.Z
-    # - Container artifacts must be X.Y.Z
-    - |
-      if [ -n "$CI_COMMIT_TAG" ]; then
-        export BASE_CONTAINERS_VERSION="${CI_COMMIT_TAG#v}"
-        echo "Tag pipeline detected; normalized version: $BASE_CONTAINERS_VERSION"
-      fi
 
     # Tooling
     - apk add --no-cache make git-lfs
