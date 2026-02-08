@@ -46,6 +46,7 @@ group "foundation" {
   targets = [
     "foundation-runtime-java-17-jdk-openjdk-upstream",
     "foundation-runtime-java-17-jdk-zulu-musl-vendored",
+    "foundation-runtime-java-21-jdk-openjdk-upstream",
     "foundation-runtime-python-3_12-upstream"
   ]
 }
@@ -55,6 +56,7 @@ group "entry" {
     "entry-opentofu-1_11-vendored",
     "entry-terraform-1_11-upstream",
     "entry-docker-cli-29-vendored",
+    "entry-docker-cli-buildx-29-vendored",
     "entry-gcloud-479_0_0-vendored"
   ]
 }
@@ -62,7 +64,9 @@ group "entry" {
 group "usecase" {
   targets = [
     "usecase-openjdk-jre17",
-    "usecase-akka-http-jre17"
+    "usecase-akka-http-jre17",
+    "usecase-openjdk-jre21",
+    "usecase-pekko-http-jre21"
   ]
 }
 
@@ -83,15 +87,19 @@ group "default" {
 
     "foundation-runtime-java-17-jdk-openjdk-upstream",
     "foundation-runtime-java-17-jdk-zulu-musl-vendored",
+    "foundation-runtime-java-21-jdk-openjdk-upstream",
     "foundation-runtime-python-3_12-upstream",
 
     "entry-opentofu-1_11-vendored",
     "entry-terraform-1_11-upstream",
     "entry-docker-cli-29-vendored",
+    "entry-docker-cli-buildx-29-vendored",
     "entry-gcloud-479_0_0-vendored",
 
     "usecase-openjdk-jre17",
     "usecase-akka-http-jre17",
+    "usecase-openjdk-jre21",
+    "usecase-pekko-http-jre21",
 
     "daemon-docker-29-dind-rootless-vendored"
   ]
@@ -167,6 +175,25 @@ target "foundation-runtime-java-17-jdk-zulu-musl-vendored" {
 
 #endregion Foundation runtime java 17 images
 
+#region Foundation runtime java 21 images
+
+target "foundation-runtime-java-21-jdk-openjdk-upstream" {
+  inherits   = ["common"]
+  context    = "containers/foundation/runtime/java/21/jdk/openjdk/upstream"
+  depends_on = ["base-alpine-3_23-upstream"]
+
+  contexts = {
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
+  }
+
+  tags = [
+    "${BASE_CONTAINERS_IMAGE_BASE}/foundation-runtime-java-21-jdk-openjdk-upstream:${BASE_CONTAINERS_TAG}",
+    "${BASE_CONTAINERS_IMAGE_BASE}/foundation-runtime-java-21-jdk-openjdk-upstream:${BASE_CONTAINERS_TAG_LATEST}"
+  ]
+}
+
+#endregion Foundation runtime java 21 images
+
 target "foundation-runtime-python-3_12-upstream" {
   inherits   = ["common"]
   context    = "containers/foundation/runtime/python/3.12/upstream"
@@ -199,6 +226,21 @@ target "entry-docker-cli-29-vendored" {
   tags = [
     "${BASE_CONTAINERS_IMAGE_BASE}/entry-docker-cli-29-vendored:${BASE_CONTAINERS_TAG}",
     "${BASE_CONTAINERS_IMAGE_BASE}/entry-docker-cli-29-vendored:${BASE_CONTAINERS_TAG_LATEST}"
+  ]
+}
+
+target "entry-docker-cli-buildx-29-vendored" {
+  inherits   = ["common"]
+  context    = "containers/entry/docker-cli/29/buildx-vendored"
+  depends_on = ["entry-docker-cli-29-vendored"]
+
+  contexts = {
+    from_image_build_ref = "target:entry-docker-cli-29-vendored"
+  }
+
+  tags = [
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-docker-cli-buildx-29-vendored:${BASE_CONTAINERS_TAG}",
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-docker-cli-buildx-29-vendored:${BASE_CONTAINERS_TAG_LATEST}"
   ]
 }
 
@@ -282,6 +324,40 @@ target "usecase-akka-http-jre17" {
   tags = [
     "${BASE_CONTAINERS_IMAGE_BASE}/usecase-akka-http-jre17:${BASE_CONTAINERS_TAG}",
     "${BASE_CONTAINERS_IMAGE_BASE}/usecase-akka-http-jre17:${BASE_CONTAINERS_TAG_LATEST}"
+  ]
+}
+
+target "usecase-openjdk-jre21" {
+  inherits   = ["common"]
+  context    = "containers/usecase/openjdk-jre21"
+  depends_on = [
+    "base-alpine-3_23-upstream",
+    "foundation-runtime-java-21-jdk-openjdk-upstream"
+  ]
+
+  contexts = {
+    from_image_build_ref-base-alpine-3_23-upstream = "target:base-alpine-3_23-upstream"
+    from_image_build_ref-foundation-runtime-java-21-jdk-openjdk-upstream = "target:foundation-runtime-java-21-jdk-openjdk-upstream"
+  }
+
+  tags = [
+    "${BASE_CONTAINERS_IMAGE_BASE}/usecase-openjdk-jre21:${BASE_CONTAINERS_TAG}",
+    "${BASE_CONTAINERS_IMAGE_BASE}/usecase-openjdk-jre21:${BASE_CONTAINERS_TAG_LATEST}"
+  ]
+}
+
+target "usecase-pekko-http-jre21" {
+  inherits   = ["common"]
+  context    = "containers/usecase/pekko-http-jre21"
+  depends_on = ["usecase-openjdk-jre21"]
+
+  contexts = {
+    from_image_build_ref = "target:usecase-openjdk-jre21"
+  }
+
+  tags = [
+    "${BASE_CONTAINERS_IMAGE_BASE}/usecase-pekko-http-jre21:${BASE_CONTAINERS_TAG}",
+    "${BASE_CONTAINERS_IMAGE_BASE}/usecase-pekko-http-jre21:${BASE_CONTAINERS_TAG_LATEST}"
   ]
 }
 
