@@ -22,6 +22,22 @@ This project follows Semantic Versioning.
 
 ---
 
+## v0.3.0
+
+### Added
+- Java 21 OpenJDK foundation image (`foundation/runtime/java/21/jdk/openjdk/upstream`).
+- JRE 21 usecase image (`usecase/openjdk-jre21`).
+- Pekko HTTP JRE 21 usecase image (`usecase/pekko-http-jre21`).
+- Docker CLI 29 buildx-vendored entry image with Buildx v0.30.1 and Compose v5.0.1.
+- Corresponding bake targets for all new images.
+
+### Changed
+- `.gitattributes` updated for LFS tracking of vendored binary artifacts.
+- `.gitignore` streamlined and reorganized.
+- Existing JRE 17 usecase Dockerfile aligned with new layering conventions.
+
+---
+
 ## v0.2.0
 
 ### Added
