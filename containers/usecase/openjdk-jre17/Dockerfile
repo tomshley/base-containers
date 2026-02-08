@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2017–present Tomshley LLC
 
-# Use case: Vednored OpenJDK 17 JRE
+# Use case: Vendored OpenJDK 17 JRE
 # - built via jlink from a foundation JDK
 # - generic, framework-agnostic
 # - intended for direct consumption by applications
@@ -24,8 +24,7 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 COPY --from=jre-headless /javaruntime $JAVA_HOME
 
 RUN apk add --no-cache bash && \
-    java -version && \
-    rm -rf /var/cache/apk/*
+    java -version
 
 WORKDIR /
 
