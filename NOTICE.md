@@ -50,6 +50,14 @@ These assets are provided to ensure:
 
 ## Third-Party Notices
 
-At this time, this project does not bundle third-party source code requiring additional attribution.
+This project vendors the following third-party binary artifacts (tracked via Git LFS):
 
-If third-party components are added in the future, required attributions will be documented here.
+- **Docker CLI** — Apache License 2.0 — https://github.com/docker/cli
+- **Docker Buildx** — Apache License 2.0 — https://github.com/docker/buildx
+- **Docker Compose** — Apache License 2.0 — https://github.com/docker/compose
+- **OpenTofu** — MPL 2.0 — https://github.com/opentofu/opentofu
+- **HashiCorp Terraform** — BSL 1.1 — https://github.com/hashicorp/terraform
+- **Google Cloud SDK** — Apache License 2.0 — https://cloud.google.com/sdk/docs/install
+- **Azul Zulu JDK** — GPLv2 with Classpath Exception — https://www.azul.com/downloads/
+
+These artifacts are not modified. They are embedded to ensure build reproducibility and supply-chain stability.
