@@ -10,7 +10,7 @@ Only the most recent versions of images are actively maintained.
 If you discover a security vulnerability:
 
 - **Do not** open a public issue
-- Report it privately via a GitHub security advisory or direct contact
+- Report it privately via a GitLab confidential issue or direct contact with Tomshley LLC
 
 Please include:
 - Image name and tag

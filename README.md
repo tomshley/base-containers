@@ -17,7 +17,7 @@ Tomshley Base Containers provides a small, opinionated set of **Alpine-based con
 
 - CI/CD pipeline execution environments
 - Language and runtime base images
-- Application container images (e.g. Akka HTTP services)
+- Application container images (e.g. Pekko HTTP and Akka HTTP services)
 
 The project prioritizes correctness, minimalism, reproducibility, and long-term maintainability.
 
@@ -37,62 +37,101 @@ The project prioritizes correctness, minimalism, reproducibility, and long-term 
 
 ## Architecture, Naming & Sourcing
 
-The repository is organized around **lifecycle roles** (OS bases, foundational layers, composable runners, and daemons) and a strict **image identity** model.
+The repository is organized around **lifecycle roles** and a strict **image identity** model.
 
 There are three orthogonal axes:
 
-1. **Role** (base, foundation, runner, daemon)
+1. **Role** (base, foundation, entry, usecase, daemon)
 2. **Identity** (major version, non-default variants like `edge` or `rootless`)
 3. **Source model** (`upstream` vs `vendored`)
 
 - **Upstream** images derive their artifacts from external projects or registries at build time.
-- **Vendored** images embed and checksum artifacts directly in this repository to ensure reproducibility and supply‑chain stability.
+- **Vendored** images embed and checksum artifacts directly in this repository to ensure reproducibility and supply-chain stability.
 
 These axes are always explicit and never implicit.
 
-- See **ARCHITECTURE.md** for repository structure and layering rules.
-- See **NAMING.md** for image naming, tagging, and variant conventions.
+---
+
+## Registry Access
+
+Container images are published to a **private GitLab Container Registry**.
+
+### For CI/CD Consumers (GitLab Job Tokens)
+
+Downstream GitLab projects that need to pull these images in CI pipelines must be added to the **CI/CD job token allowlist** for this project. This is configured under:
+
+> **Settings → CI/CD → Job token permissions → CI/CD job token allowlist**
+
+Only projects explicitly allowlisted can authenticate using `$CI_JOB_TOKEN` to pull images.
+
+### For Direct Access
+
+Direct access to container images (outside of allowlisted CI pipelines) is **not publicly available**.
+
+To request access, contact **Tomshley LLC**:
+
+- **Website:** [tomshley.com](https://tomshley.com)
+- **Email:** oss@tomshley.com
+
+Tomshley LLC reserves the right to grant or deny access at its discretion.
 
 ---
 
 ## Installation
 
+Images are not available on public registries. After obtaining access, pull images using your configured registry coordinates.
+
 Example (OS base, stable Alpine, upstream):
 
 ```bash
-docker pull ghcr.io/tomshley/base-alpine-3_19-upstream:latest
+docker pull $REGISTRY/$NAMESPACE/base-containers/base-alpine-3_23-upstream:latest
 ```
 
 Example (OS base, Alpine edge, upstream):
 
 ```bash
-docker pull ghcr.io/tomshley/base-alpine-edge-upstream:latest
+docker pull $REGISTRY/$NAMESPACE/base-containers/base-alpine-edge-upstream:latest
 ```
 
-> Note: `latest` is **scoped to a single image identity**.  
+> Note: `latest` is **scoped to a single image identity**.
 > It never spans multiple versions, variants, or source models.
 
 ---
 
 ## Usage
 
-### CI/CD Pipelines (Composable tooling layers)
+### CI/CD Pipelines (Entry tooling layers)
 
-Runners are **composable tooling layers** designed to be extended or copied from.
+Entry images are **composable tooling layers** designed to be extended or copied from.
 They are not required to define ENTRYPOINTs.
 
-Example (tooling layer, upstream):
+Example (OpenTofu, vendored):
 
 ```dockerfile
-FROM ghcr.io/tomshley/runner-sbt-1_9-upstream:latest
+FROM entry-opentofu-1_11-vendored AS tofu
 ```
 
-### Application Images (Akka HTTP)
-
-Example (Java runtime, vendored):
+Example (Docker CLI with Buildx, vendored):
 
 ```dockerfile
-FROM ghcr.io/tomshley/runtime-java-17-jdk-vendored:latest
+FROM entry-docker-cli-buildx-29-vendored AS docker
+```
+
+### Application Images (Pekko HTTP / Akka HTTP)
+
+Example (Pekko HTTP on JRE 21, usecase):
+
+```dockerfile
+FROM usecase-pekko-http-jre21:latest
+COPY target/app.jar /app/app.jar
+EXPOSE 8080
+CMD ["java", "-jar", "/app/app.jar"]
+```
+
+Example (Akka HTTP on JRE 17, usecase):
+
+```dockerfile
+FROM usecase-akka-http-jre17:latest
 COPY target/app.jar /app/app.jar
 EXPOSE 8080
 CMD ["java", "-jar", "/app/app.jar"]
@@ -103,28 +142,26 @@ CMD ["java", "-jar", "/app/app.jar"]
 ## Project Structure
 
 ```
-base/
-foundation/
-runner/
-daemon/
-experimental/
+containers/
+  base/           — OS userlands (Alpine 3.23, edge)
+  foundation/     — non-OS layers
+    runtime/      — language runtimes (Java 17, Java 21, Python 3.12)
+  entry/          — composable tooling (Docker CLI, OpenTofu, Terraform, gcloud)
+  usecase/        — application-ready images (JRE 17, JRE 21, Akka HTTP, Pekko HTTP)
+  daemon/         — long-running services (Docker DinD rootless)
+  experimental/   — unsupported experiments
+
 examples/
+  cicd/           — buildable, normative usage patterns
+
+ci/
+  gitlab/         — shared CI templates
 
 assets/
   brand/
 
 VERSION
 ```
-
-- `base/` — OS userlands only (e.g. Alpine 3.19 vs edge as separate identities)
-- `foundation/` — non‑OS layers:
-  - `foundation/sys/` — low‑level system components (libc, libstdc++, etc.)
-  - `foundation/runtime/` — language runtimes (Java, Python, Ruby, etc.)
-  - `foundation/accel/` — hardware acceleration (CUDA, ROCm)
-- `runner/` — composable tooling layers (sbt, opentofu, terraform)
-- `daemon/` — long‑running services (Docker dind, rootless variants)
-- `experimental/` — unsupported experiments
-- `examples/` — buildable, normative usage patterns
 
 ---
 
@@ -136,6 +173,8 @@ docker buildx bake --push
 ```
 
 Bake targets are the authoritative build identities; image tags are aliases of those targets.
+
+See `docker-bake.hcl` for the complete list of targets and groups.
 
 ---
 
@@ -162,12 +201,12 @@ These behaviors are intentional and designed to minimize friction while preservi
 
 ## Versioning
 
-A top‑level `VERSION` file is the single source of truth for project release metadata.
+A top-level `VERSION` file is the single source of truth for project release metadata.
 
 - **Image identity** is expressed in the image name
 - **Build and CI metadata** are expressed in tags
 
-There is no global, cross‑image `latest`.
+There is no global, cross-image `latest`.
 
 ---
 
@@ -211,7 +250,7 @@ from the *Breakground* project.
 
 ### CI Structure
 
-The pipeline composes two generic templates provided by Breakground:
+The pipeline composes four generic templates provided by Breakground:
 
 - **`.stages-base.yml`**
   - Defines the global stage layout (`build`, `deploy`, etc.)
@@ -222,18 +261,24 @@ The pipeline composes two generic templates provided by Breakground:
   - Computes an immutable build revision
   - Provides manual flow hooks
 
+- **`.container-tags.yml`**
+  - Resolves deterministic container tags for branch, MR, and release pipelines
+
+- **`.artifact-publish-policy.yml`**
+  - Controls when artifact publishing jobs are enabled (tag-gated, manual)
+
 This repository then supplies **only the container-specific implementation**.
 
 ### Active Jobs
 
-Currently, only two jobs are defined:
+Currently, two jobs are defined:
 
 - **load** (`build` stage)
   - Runs `make build-load`
   - Builds and loads supported images locally
   - Does not publish artifacts
 
-- **push** (`deploy` stage, manual, tag-gated)
+- **publish-containers** (`deploy` stage, tag-gated via `.flow-artifact-publish`)
   - Runs `make push`
   - Publishes supported and experimental images to the registry
 
@@ -245,7 +290,7 @@ Additional stages (validate, test, security, etc.) are intentionally present but
 - **DinD service:** `docker:29.1.5-dind-alpine3.23`
 - **Runner:** `saas-linux-xlarge-amd64`
 
-> Note: Docker does not publish `*-dind-alpine` tags.  
+> Note: Docker does not publish `*-dind-alpine` tags.
 > The DinD image is already Alpine-based and must use `*-dind`.
 
 ### Secrets Handling
@@ -259,7 +304,7 @@ A GitLab **secure file** named `.env` may be provided.
 This keeps secret handling:
 - out of CI logic
 - consistent with local builds
-- compatible with air‑gapped environments
+- compatible with air-gapped environments
 
 ### Intentional Omissions
 
