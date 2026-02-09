@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2017–present Tomshley LLC
 
-FROM --platform=$BUILDPLATFORM from_image_build_ref
-
 # NOTE:
 # This is a vendored OpenTofu build.
 # We vendor because Alpine stable lags upstream releases.
@@ -41,4 +39,6 @@ RUN set -eux; \
     apk add --no-cache --allow-untrusted "/tmp/$file"; \
     rm -rf /tmp/* /var/cache/apk/*
 
-ENTRYPOINT ["tofu"]
+COPY --chmod=755 files/entrypoint.sh /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["sh"]
