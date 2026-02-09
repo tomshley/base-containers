@@ -43,4 +43,6 @@ RUN set -eux; \
     chmod +x /usr/local/bin/terraform; \
     rm -rf /tmp/* /var/cache/apk/*
 
-ENTRYPOINT ["terraform"]
+COPY --chmod=755 files/entrypoint.sh /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["sh"]
