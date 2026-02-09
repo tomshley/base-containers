@@ -38,4 +38,6 @@ RUN set -eux; \
     chmod +x /usr/local/bin/docker; \
     rm -rf /tmp/* /var/cache/apk/*
 
-ENTRYPOINT ["docker"]
+COPY --chmod=755 files/entrypoint.sh /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["sh"]
