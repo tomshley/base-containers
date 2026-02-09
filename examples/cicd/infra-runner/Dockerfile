@@ -5,7 +5,7 @@
 FROM entry-opentofu-1_11-vendored AS tofu
 
 # ---- Terraform ----
-FROM entry-terraform-1_11-upstream AS terraform
+FROM entry-terraform-1_11-vendored AS terraform
 
 # ---- Google Cloud SDK ----
 FROM entry-gcloud-479_0_0-vendored AS gcloud

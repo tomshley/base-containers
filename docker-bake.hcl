@@ -54,7 +54,7 @@ group "foundation" {
 group "entry" {
   targets = [
     "entry-opentofu-1_11-vendored",
-    "entry-terraform-1_11-upstream",
+    "entry-terraform-1_11-vendored",
     "entry-docker-cli-29-vendored",
     "entry-docker-cli-buildx-29-vendored",
     "entry-gcloud-479_0_0-vendored"
@@ -91,7 +91,7 @@ group "default" {
     "foundation-runtime-python-3_12-upstream",
 
     "entry-opentofu-1_11-vendored",
-    "entry-terraform-1_11-upstream",
+    "entry-terraform-1_11-vendored",
     "entry-docker-cli-29-vendored",
     "entry-docker-cli-buildx-29-vendored",
     "entry-gcloud-479_0_0-vendored",
@@ -274,7 +274,7 @@ target "entry-opentofu-1_11-vendored" {
   ]
 }
 
-target "entry-terraform-1_11-upstream" {
+target "entry-terraform-1_11-vendored" {
   inherits   = ["common"]
   context    = "containers/entry/terraform/1.11/vendored"
   depends_on = ["base-alpine-3_23-upstream"]
@@ -284,8 +284,8 @@ target "entry-terraform-1_11-upstream" {
   }
 
   tags = [
-    "${BASE_CONTAINERS_IMAGE_BASE}/entry-terraform-1_11-upstream:${BASE_CONTAINERS_TAG}",
-    "${BASE_CONTAINERS_IMAGE_BASE}/entry-terraform-1_11-upstream:${BASE_CONTAINERS_TAG_LATEST}"
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-terraform-1_11-vendored:${BASE_CONTAINERS_TAG}",
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-terraform-1_11-vendored:${BASE_CONTAINERS_TAG_LATEST}"
   ]
 }
 
