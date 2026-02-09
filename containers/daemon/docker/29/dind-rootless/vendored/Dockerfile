@@ -113,7 +113,7 @@ RUN mkdir -p /run/user /home/rootless/.local/share/docker \
 VOLUME /home/rootless/.local/share/docker
 
 # ---- Entrypoint ----
-COPY files/dockerd-entrypoint.sh /usr/local/bin/dockerd-entrypoint.sh
+COPY --chmod=755 files/dockerd-entrypoint.sh /usr/local/bin/dockerd-entrypoint.sh
 
 USER rootless
 

@@ -56,4 +56,5 @@ RUN set -eux; \
     install -D -m 0755 "/tmp/$inner" /usr/local/lib/docker/cli-plugins/docker-compose; \
     rm -f /tmp/compose-x64.tgz /tmp/compose-arm64.tgz "/tmp/$inner"
 
-ENTRYPOINT ["docker"]
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["sh"]
