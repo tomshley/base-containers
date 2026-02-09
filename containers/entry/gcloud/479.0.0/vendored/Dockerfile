@@ -18,6 +18,7 @@ ENV CLOUDSDK_PYTHON_SITEPACKAGES=1
 ARG GCLOUD_VERSION="479.0.0"
 
 ARG GCLOUD_X64_FILE="google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz"
+# NOTE: Google names the aarch64 archive "linux-arm" (not "linux-arm64")
 ARG GCLOUD_ARM64_FILE="google-cloud-cli-${GCLOUD_VERSION}-linux-arm.tar.gz"
 
 # ---- Upstream SHA256 checksums (recorded at vendoring time) ----
@@ -44,8 +45,10 @@ RUN set -eux; \
     tar -xzf "/tmp/$file" -C /opt; \
     ln -s /opt/google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud; \
     ln -s /opt/google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil; \
-    ln -s /opt/google-cloud-sdk/bin/gcloud /usr/local/bin/gke-gcloud-auth-plugin; \
     rm -rf /tmp/* /var/cache/apk/*
+
+# NOTE: gke-gcloud-auth-plugin is a separate binary; install in downstream images via:
+#   gcloud components install gke-gcloud-auth-plugin --quiet
 
 ENV PATH="/opt/google-cloud-sdk/bin:${PATH}"
 
