@@ -49,4 +49,6 @@ RUN set -eux; \
 
 ENV PATH="/opt/google-cloud-sdk/bin:${PATH}"
 
-ENTRYPOINT ["gcloud"]
+COPY --chmod=755 files/entrypoint.sh /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["sh"]
