@@ -41,6 +41,7 @@ COPY files/${RUST_ARM64_FILE} /tmp/
 
 RUN set -eux; \
     apk add --no-cache \
+      bash \
       ca-certificates \
       coreutils \
       musl-dev; \
