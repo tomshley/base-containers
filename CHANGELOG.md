@@ -6,6 +6,21 @@ This project follows Semantic Versioning.
 
 ---
 
+## v0.3.5
+
+### Changed
+- `usecase/pekko-http-jre21`: Rewritten as self-contained multi-stage build with Temurin JRE-equivalent jlink (`java.se` + curated `jdk.*` modules), `--strip-native-debug-symbols`, and default CDS archive generation. No longer layers on `usecase/openjdk-jre21`.
+- `docker-bake.hcl`: `usecase-pekko-http-jre21` target now depends on `foundation-runtime-java-21-jdk-openjdk-upstream` and `base-alpine-3_23-upstream` directly.
+- `README.md`: Removed all Akka HTTP references.
+
+### Removed
+- `usecase/akka-http-jre17`: Image and bake target removed. No downstream consumers remain.
+
+### Fixed
+- Estimated ~40–60 MiB compressed image size reduction for Pekko HTTP services (~185 MiB → ~115–130 MiB).
+
+---
+
 ## v0.3.0
 
 ### Added
