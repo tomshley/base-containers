@@ -6,6 +6,13 @@ This project follows Semantic Versioning.
 
 ---
 
+## v0.4.1
+
+### Fixed
+- `entry/rust/1.83/vendored`: Added missing `bash` dependency required by Rust's `install.sh` installer script.
+
+---
+
 ## v0.4.0
 
 ### Added
