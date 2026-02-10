@@ -17,7 +17,7 @@ Tomshley Base Containers provides a small, opinionated set of **Alpine-based con
 
 - CI/CD pipeline execution environments
 - Language and runtime base images
-- Application container images (e.g. Pekko HTTP and Akka HTTP services)
+- Application container images (e.g. Pekko HTTP services)
 
 The project prioritizes correctness, minimalism, reproducibility, and long-term maintainability.
 
@@ -117,21 +117,12 @@ Example (Docker CLI with Buildx, vendored):
 FROM entry-docker-cli-buildx-29-vendored AS docker
 ```
 
-### Application Images (Pekko HTTP / Akka HTTP)
+### Application Images (Pekko HTTP)
 
 Example (Pekko HTTP on JRE 21, usecase):
 
 ```dockerfile
 FROM usecase-pekko-http-jre21:latest
-COPY target/app.jar /app/app.jar
-EXPOSE 8080
-CMD ["java", "-jar", "/app/app.jar"]
-```
-
-Example (Akka HTTP on JRE 17, usecase):
-
-```dockerfile
-FROM usecase-akka-http-jre17:latest
 COPY target/app.jar /app/app.jar
 EXPOSE 8080
 CMD ["java", "-jar", "/app/app.jar"]
@@ -147,7 +138,7 @@ containers/
   foundation/     — non-OS layers
     runtime/      — language runtimes (Java 17, Java 21, Python 3.12)
   entry/          — composable tooling (Docker CLI, OpenTofu, Terraform, gcloud)
-  usecase/        — application-ready images (JRE 17, JRE 21, Akka HTTP, Pekko HTTP)
+  usecase/        — application-ready images (JRE 17, JRE 21, Pekko HTTP)
   daemon/         — long-running services (Docker DinD rootless)
   experimental/   — unsupported experiments
 
