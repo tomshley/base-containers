@@ -6,6 +6,16 @@ This project follows Semantic Versioning.
 
 ---
 
+## v0.4.0
+
+### Added
+- Rust 1.83.0 static-musl toolchain entry image (`entry/rust/1.83/vendored`) for x86_64 and aarch64.
+- Vendored tarballs tracked via Git LFS for air-gap readiness.
+- SHA256 checksum verification at build time.
+- Corresponding bake target (`entry-rust-1_83-vendored`) wired into entry and default groups.
+
+---
+
 ## v0.3.5
 
 ### Changed

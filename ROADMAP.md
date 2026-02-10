@@ -19,6 +19,10 @@ This document outlines **intent**, not commitments.
 - Docker CLI 29 with Buildx and Compose (vendored)
 - Python 3.12 foundation image
 
+### 0.4.x — Rust Toolchain
+
+- Rust 1.83 static-musl vendored entry image (x86_64 + aarch64)
+
 ## Short Term
 
 - Finalize Alpine base image contract
