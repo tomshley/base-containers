@@ -5,7 +5,7 @@
 FROM entry-docker-cli-29-vendored AS docker
 
 # ---- Buildx plugin (vendored via docker image) ----
-FROM docker/buildx-bin:0.13.1 AS buildx
+FROM docker/buildx-bin:0.30.1 AS buildx
 
 # ---- Final runner image ----
 FROM base-alpine-3_23-upstream
