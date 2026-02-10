@@ -26,4 +26,6 @@ containers/foundation/runtime/java/**/vendored/files/*.tar.gz filter=lfs diff=lf
 containers/daemon/docker/**/vendored/files/**/*.tgz filter=lfs diff=lfs merge=lfs -text
 containers/daemon/docker/**/vendored/files/**/buildx-* filter=lfs diff=lfs merge=lfs -text
 containers/daemon/docker/**/vendored/files/**/docker-compose-* filter=lfs diff=lfs merge=lfs -text
+# Rust – vendored musl toolchain
+containers/entry/rust/**/files/*.tar.xz filter=lfs diff=lfs merge=lfs -text
 # endregion
