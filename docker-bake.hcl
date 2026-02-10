@@ -65,7 +65,6 @@ group "entry" {
 group "usecase" {
   targets = [
     "usecase-openjdk-jre17",
-    "usecase-akka-http-jre17",
     "usecase-openjdk-jre21",
     "usecase-pekko-http-jre21"
   ]
@@ -99,7 +98,6 @@ group "default" {
     "entry-sbt-1_12-vendored",
 
     "usecase-openjdk-jre17",
-    "usecase-akka-http-jre17",
     "usecase-openjdk-jre21",
     "usecase-pekko-http-jre21",
 
@@ -329,21 +327,6 @@ target "usecase-openjdk-jre17" {
   ]
 }
 
-target "usecase-akka-http-jre17" {
-  inherits   = ["common"]
-  context    = "containers/usecase/akka-http-jre17"
-  depends_on = ["foundation-runtime-java-17-jdk-openjdk-upstream"]
-
-  contexts = {
-    from_image_build_ref = "target:foundation-runtime-java-17-jdk-openjdk-upstream"
-  }
-
-  tags = [
-    "${BASE_CONTAINERS_IMAGE_BASE}/usecase-akka-http-jre17:${BASE_CONTAINERS_TAG}",
-    "${BASE_CONTAINERS_IMAGE_BASE}/usecase-akka-http-jre17:${BASE_CONTAINERS_TAG_LATEST}"
-  ]
-}
-
 target "usecase-openjdk-jre21" {
   inherits   = ["common"]
   context    = "containers/usecase/openjdk-jre21"
@@ -366,10 +349,14 @@ target "usecase-openjdk-jre21" {
 target "usecase-pekko-http-jre21" {
   inherits   = ["common"]
   context    = "containers/usecase/pekko-http-jre21"
-  depends_on = ["usecase-openjdk-jre21"]
+  depends_on = [
+    "base-alpine-3_23-upstream",
+    "foundation-runtime-java-21-jdk-openjdk-upstream"
+  ]
 
   contexts = {
-    from_image_build_ref = "target:usecase-openjdk-jre21"
+    from_image_build_ref-base-alpine-3_23-upstream = "target:base-alpine-3_23-upstream"
+    from_image_build_ref-foundation-runtime-java-21-jdk-openjdk-upstream = "target:foundation-runtime-java-21-jdk-openjdk-upstream"
   }
 
   tags = [
