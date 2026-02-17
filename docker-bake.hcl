@@ -59,7 +59,8 @@ group "entry" {
     "entry-docker-cli-buildx-29-vendored",
     "entry-gcloud-479_0_0-vendored",
     "entry-rust-1_83-vendored",
-    "entry-sbt-1_12-vendored"
+    "entry-sbt-1_12-vendored",
+    "entry-allure-2_30_0-vendored"
   ]
 }
 
@@ -98,6 +99,7 @@ group "default" {
     "entry-gcloud-479_0_0-vendored",
     "entry-rust-1_83-vendored",
     "entry-sbt-1_12-vendored",
+    "entry-allure-2_30_0-vendored",
 
     "usecase-openjdk-jre17",
     "usecase-openjdk-jre21",
@@ -318,6 +320,21 @@ target "entry-sbt-1_12-vendored" {
   tags = [
     "${BASE_CONTAINERS_IMAGE_BASE}/entry-sbt-1_12-vendored:${BASE_CONTAINERS_TAG}",
     "${BASE_CONTAINERS_IMAGE_BASE}/entry-sbt-1_12-vendored:${BASE_CONTAINERS_TAG_LATEST}"
+  ]
+}
+
+target "entry-allure-2_30_0-vendored" {
+  inherits   = ["common"]
+  context    = "containers/entry/allure/2.30.0/vendored"
+  depends_on = ["base-alpine-3_23-upstream"]
+
+  contexts = {
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
+  }
+
+  tags = [
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-allure-2_30_0-vendored:${BASE_CONTAINERS_TAG}",
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-allure-2_30_0-vendored:${BASE_CONTAINERS_TAG_LATEST}"
   ]
 }
 
