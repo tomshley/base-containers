@@ -14,6 +14,8 @@
 assets/brand/*.png filter=lfs diff=lfs merge=lfs -text
 # Docker CLI – vendored binaries
 containers/entry/docker-cli/**/files/**/*.tgz filter=lfs diff=lfs merge=lfs -text
+# Allure – vendored binaries
+containers/entry/allure/**/files/**/*.tgz filter=lfs diff=lfs merge=lfs -text
 # Google Cloud CLI – vendored binaries
 containers/entry/gcloud/**/files/*.tar.gz filter=lfs diff=lfs merge=lfs -text
 # OpenTofu – vendored packages
