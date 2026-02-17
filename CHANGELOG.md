@@ -6,6 +6,16 @@ This project follows Semantic Versioning.
 
 ---
 
+## v0.4.2
+
+### Added
+- Allure 2.30.0 CLI entry image (`entry/allure/2.30.0/vendored`) for amd64 and arm64.
+- Vendored tarball tracked via Git LFS with SHA256 verification at build time.
+- No JRE bundled — consuming runner must provide Java 17+ (JDK 21 recommended).
+- Corresponding bake target (`entry-allure-2_30_0-vendored`) wired into entry and default groups.
+
+---
+
 ## v0.4.1
 
 ### Fixed
