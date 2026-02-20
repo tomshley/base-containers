@@ -60,7 +60,8 @@ group "entry" {
     "entry-gcloud-479_0_0-vendored",
     "entry-rust-1_83-vendored",
     "entry-sbt-1_12-vendored",
-    "entry-allure-2_30_0-vendored"
+    "entry-allure-2_30_0-vendored",
+    "entry-zig-0_15-vendored"
   ]
 }
 
@@ -100,6 +101,7 @@ group "default" {
     "entry-rust-1_83-vendored",
     "entry-sbt-1_12-vendored",
     "entry-allure-2_30_0-vendored",
+    "entry-zig-0_15-vendored",
 
     "usecase-openjdk-jre17",
     "usecase-openjdk-jre21",
@@ -335,6 +337,21 @@ target "entry-allure-2_30_0-vendored" {
   tags = [
     "${BASE_CONTAINERS_IMAGE_BASE}/entry-allure-2_30_0-vendored:${BASE_CONTAINERS_TAG}",
     "${BASE_CONTAINERS_IMAGE_BASE}/entry-allure-2_30_0-vendored:${BASE_CONTAINERS_TAG_LATEST}"
+  ]
+}
+
+target "entry-zig-0_15-vendored" {
+  inherits   = ["common"]
+  context    = "containers/entry/zig/0.15/vendored"
+  depends_on = ["base-alpine-3_23-upstream"]
+
+  contexts = {
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
+  }
+
+  tags = [
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-zig-0_15-vendored:${BASE_CONTAINERS_TAG}",
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-zig-0_15-vendored:${BASE_CONTAINERS_TAG_LATEST}"
   ]
 }
 
