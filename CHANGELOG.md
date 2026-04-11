@@ -15,6 +15,9 @@ This project follows Semantic Versioning.
 - Non-root `appuser` (UID 1001) for production workloads.
 - Corresponding bake target (`usecase-python-uvicorn`) wired into usecase and default groups.
 
+### Changed
+- Removed IDE-specific credential ignores and Snyk AI rules from `.gitignore`.
+
 ---
 
 ## v0.4.2
