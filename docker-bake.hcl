@@ -69,7 +69,8 @@ group "usecase" {
   targets = [
     "usecase-openjdk-jre17",
     "usecase-openjdk-jre21",
-    "usecase-pekko-http-jre21"
+    "usecase-pekko-http-jre21",
+    "usecase-python-uvicorn"
   ]
 }
 
@@ -106,6 +107,7 @@ group "default" {
     "usecase-openjdk-jre17",
     "usecase-openjdk-jre21",
     "usecase-pekko-http-jre21",
+    "usecase-python-uvicorn",
 
     "daemon-docker-29-dind-rootless-vendored"
   ]
@@ -413,6 +415,25 @@ target "usecase-pekko-http-jre21" {
   tags = [
     "${BASE_CONTAINERS_IMAGE_BASE}/usecase-pekko-http-jre21:${BASE_CONTAINERS_TAG}",
     "${BASE_CONTAINERS_IMAGE_BASE}/usecase-pekko-http-jre21:${BASE_CONTAINERS_TAG_LATEST}"
+  ]
+}
+
+target "usecase-python-uvicorn" {
+  inherits   = ["common"]
+  context    = "containers/usecase/python-uvicorn"
+  depends_on = [
+    "base-alpine-3_23-upstream",
+    "foundation-runtime-python-3_12-upstream"
+  ]
+
+  contexts = {
+    from_image_build_ref-base-alpine-3_23-upstream               = "target:base-alpine-3_23-upstream"
+    from_image_build_ref-foundation-runtime-python-3_12-upstream = "target:foundation-runtime-python-3_12-upstream"
+  }
+
+  tags = [
+    "${BASE_CONTAINERS_IMAGE_BASE}/usecase-python-uvicorn:${BASE_CONTAINERS_TAG}",
+    "${BASE_CONTAINERS_IMAGE_BASE}/usecase-python-uvicorn:${BASE_CONTAINERS_TAG_LATEST}"
   ]
 }
 

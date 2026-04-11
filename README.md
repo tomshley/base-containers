@@ -128,6 +128,19 @@ EXPOSE 8080
 CMD ["java", "-jar", "/app/app.jar"]
 ```
 
+### Application Images (Python Uvicorn)
+
+Example (FastAPI / ASGI on Python 3.12, usecase):
+
+```dockerfile
+FROM usecase-python-uvicorn:latest
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY src/ /app/src/
+EXPOSE 8000
+CMD ["--host", "0.0.0.0", "--port", "8000", "src.main:app"]
+```
+
 ---
 
 ## Project Structure
@@ -138,7 +151,7 @@ containers/
   foundation/     — non-OS layers
     runtime/      — language runtimes (Java 17, Java 21, Python 3.12)
   entry/          — composable tooling (Docker CLI, OpenTofu, Terraform, gcloud)
-  usecase/        — application-ready images (JRE 17, JRE 21, Pekko HTTP)
+  usecase/        — application-ready images (JRE 17, JRE 21, Pekko HTTP, Python Uvicorn)
   daemon/         — long-running services (Docker DinD rootless)
   experimental/   — unsupported experiments
 
