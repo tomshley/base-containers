@@ -6,6 +6,20 @@ This project follows Semantic Versioning.
 
 ---
 
+## v0.5.0
+
+### Added
+- Python Uvicorn usecase image (`usecase/python-uvicorn`) for Python 3.12 ASGI services.
+- Built on `foundation-runtime-python-3_12-upstream` (Alpine system Python).
+- Isolated `/opt/venv` with `uvicorn[standard]` pre-installed.
+- Non-root `appuser` (UID 1001) for production workloads.
+- Corresponding bake target (`usecase-python-uvicorn`) wired into usecase and default groups.
+
+### Changed
+- Removed IDE-specific credential ignores and Snyk AI rules from `.gitignore`.
+
+---
+
 ## v0.4.2
 
 ### Added
