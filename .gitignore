@@ -23,8 +23,3 @@ endpoint.config
 Thumbs.db
 
 # --- END multi-project ignores ---
-
-# Credentials
-.tware.resolver.*.cred
-
-# Snyk Security Extension - AI Rules (auto-generated)
