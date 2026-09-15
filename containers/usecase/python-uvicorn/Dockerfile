@@ -13,14 +13,14 @@
 # - intended for direct consumption by FastAPI / Starlette / ASGI services
 
 # --- Stage 1: build venv on foundation image (has system pip) ---
-FROM --platform=$BUILDPLATFORM from_image_build_ref-foundation-runtime-python-3_12-upstream AS builder
+FROM --platform=$TARGETPLATFORM from_image_build_ref-foundation-runtime-python-3_12-upstream AS builder
 
 RUN python -m venv /opt/venv \
  && /opt/venv/bin/pip install --no-cache-dir "uvicorn[standard]==0.44.0" \
  && /opt/venv/bin/uvicorn --version
 
 # --- Stage 2: runtime (python3 only, no system pip/setuptools) ---
-FROM --platform=$BUILDPLATFORM from_image_build_ref-base-alpine-3_23-upstream
+FROM --platform=$TARGETPLATFORM from_image_build_ref-base-alpine-3_23-upstream
 
 RUN apk add --no-cache python3 \
  && ln -sf /usr/bin/python3 /usr/local/bin/python

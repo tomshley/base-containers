@@ -9,7 +9,7 @@
 # This image installs repo-vendored official Google artifacts and
 # is intended for explicit composition in CI runners.
 
-FROM --platform=$BUILDPLATFORM from_image_build_ref
+FROM --platform=$TARGETPLATFORM from_image_build_ref
 
 ENV LANG=C.UTF-8
 ENV CLOUDSDK_PYTHON_SITEPACKAGES=1

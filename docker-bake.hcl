@@ -59,9 +59,11 @@ group "entry" {
     "entry-docker-cli-buildx-29-vendored",
     "entry-gcloud-479_0_0-vendored",
     "entry-rust-1_83-vendored",
+    "entry-rust-1_98-vendored",
     "entry-sbt-1_12-vendored",
     "entry-allure-2_30_0-vendored",
-    "entry-zig-0_15-vendored"
+    "entry-zig-0_15-vendored",
+    "entry-zig-0_16-vendored"
   ]
 }
 
@@ -100,9 +102,11 @@ group "default" {
     "entry-docker-cli-buildx-29-vendored",
     "entry-gcloud-479_0_0-vendored",
     "entry-rust-1_83-vendored",
+    "entry-rust-1_98-vendored",
     "entry-sbt-1_12-vendored",
     "entry-allure-2_30_0-vendored",
     "entry-zig-0_15-vendored",
+    "entry-zig-0_16-vendored",
 
     "usecase-openjdk-jre17",
     "usecase-openjdk-jre21",
@@ -312,6 +316,21 @@ target "entry-rust-1_83-vendored" {
   ]
 }
 
+target "entry-rust-1_98-vendored" {
+  inherits   = ["common"]
+  context    = "containers/entry/rust/1.98/vendored"
+  depends_on = ["base-alpine-3_23-upstream"]
+
+  contexts = {
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
+  }
+
+  tags = [
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-rust-1_98-vendored:${BASE_CONTAINERS_TAG}",
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-rust-1_98-vendored:${BASE_CONTAINERS_TAG_LATEST}"
+  ]
+}
+
 target "entry-sbt-1_12-vendored" {
   inherits   = ["common"]
   context    = "containers/entry/sbt/1.12/vendored"
@@ -354,6 +373,21 @@ target "entry-zig-0_15-vendored" {
   tags = [
     "${BASE_CONTAINERS_IMAGE_BASE}/entry-zig-0_15-vendored:${BASE_CONTAINERS_TAG}",
     "${BASE_CONTAINERS_IMAGE_BASE}/entry-zig-0_15-vendored:${BASE_CONTAINERS_TAG_LATEST}"
+  ]
+}
+
+target "entry-zig-0_16-vendored" {
+  inherits   = ["common"]
+  context    = "containers/entry/zig/0.16/vendored"
+  depends_on = ["base-alpine-3_23-upstream"]
+
+  contexts = {
+    from_image_build_ref = "target:base-alpine-3_23-upstream"
+  }
+
+  tags = [
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-zig-0_16-vendored:${BASE_CONTAINERS_TAG}",
+    "${BASE_CONTAINERS_IMAGE_BASE}/entry-zig-0_16-vendored:${BASE_CONTAINERS_TAG_LATEST}"
   ]
 }
 
