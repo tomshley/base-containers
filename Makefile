@@ -124,9 +124,14 @@ check:
 # BuildX
 # ------------------------------------------------------------------------------
 
-.PHONY: createbuildx
+.PHONY: createbuildx recreatebuildx
 
 BUILDX_NAME := tomshley_base_containers_buildx
+
+# BuildKit is pinned explicitly. The floating buildx-stable-1 tag changes the
+# builder without a repository change, including the manifest format it pushes.
+BUILDKIT_VERSION ?= v0.31.2
+BUILDKIT_IMAGE   ?= moby/buildkit:$(BUILDKIT_VERSION)
 
 createbuildx:
 	@echo "=== Create Buildx Builder ==="
@@ -134,9 +139,18 @@ createbuildx:
 	  docker buildx create \
 	    --name $(BUILDX_NAME) \
 	    --driver docker-container \
+	    --driver-opt image=$(BUILDKIT_IMAGE) \
 	    --use
 	@docker buildx inspect $(BUILDX_NAME) --bootstrap
-	@echo "✅ Buildx builder ready: $(BUILDX_NAME)"
+	@docker buildx inspect $(BUILDX_NAME) | grep -qE "BuildKit version: +$(BUILDKIT_VERSION)[[:space:]]*$$" || { \
+	  echo "ERROR: $(BUILDX_NAME) does not run BuildKit $(BUILDKIT_VERSION); run 'make recreatebuildx'"; \
+	  exit 1; }
+	@echo "✅ Buildx builder ready: $(BUILDX_NAME) (BuildKit $(BUILDKIT_VERSION))"
+
+recreatebuildx:
+	@echo "=== Recreate Buildx Builder ==="
+	@docker buildx rm $(BUILDX_NAME) >/dev/null 2>&1 || true
+	@$(MAKE) createbuildx
 
 #endregion BuildX
 
