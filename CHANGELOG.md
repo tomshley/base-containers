@@ -20,6 +20,7 @@ This project follows Semantic Versioning.
 - All container stages explicitly use `--platform=$TARGETPLATFORM`, so native binaries and runtime payloads match the architecture requested through Make/Bake.
 - Rust 1.83 now includes `libgcc`, allowing `rustc` and Cargo to start on Alpine.
 - Corrected the publication documentation: `make push` publishes the default Bake group, not experimental targets.
+- Pinned the Buildx builder's BuildKit version. The previously floating builder tag changed the published attestation manifest format, which the container registry rejected when publishing multi-architecture images.
 
 ---
 
