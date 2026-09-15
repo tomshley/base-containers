@@ -7,7 +7,7 @@
 # artifact is needed regardless of platform.
 # This image tracks SBT v1.12.x exactly.
 
-FROM --platform=$BUILDPLATFORM from_image_build_ref
+FROM --platform=$TARGETPLATFORM from_image_build_ref
 
 ENV LANG=C.UTF-8
 

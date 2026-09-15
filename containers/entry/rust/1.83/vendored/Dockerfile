@@ -2,7 +2,7 @@
 # Copyright (c) 2017–present Tomshley LLC
 
 # NOTE:
-# Rust is vendored as a standalone static-musl toolchain.
+# Rust is vendored as a standalone musl-targeted toolchain.
 # We vendor because CI runners must not reach out to the internet
 # for toolchain downloads (reproducibility + air-gap readiness).
 # This image tracks Rust v1.83.x exactly.
@@ -14,7 +14,7 @@
 #   2. Record sha256 checksums
 #   3. Place in files/ directory
 
-# NOTE: Uses $TARGETPLATFORM (not $BUILDPLATFORM like other entry images)
+# NOTE: Uses $TARGETPLATFORM rather than $BUILDPLATFORM
 # because the Rust standalone installer contains native arch-specific binaries.
 # With $BUILDPLATFORM, cross-builds would install the wrong architecture
 # toolchain since apk --print-arch reports the build host arch, not target.
@@ -23,7 +23,7 @@ FROM --platform=$TARGETPLATFORM from_image_build_ref
 
 ENV LANG=C.UTF-8
 
-# ---- Artifact identity (Rust, upstream static-musl standalone installer) ----
+# ---- Artifact identity (Rust, upstream musl-targeted standalone installer) ----
 ARG RUST_VERSION="1.83.0"
 
 ARG RUST_X64_FILE="rust-${RUST_VERSION}-x86_64-unknown-linux-musl.tar.xz"
@@ -44,6 +44,7 @@ RUN set -eux; \
       bash \
       ca-certificates \
       coreutils \
+      libgcc \
       musl-dev; \
     arch="$(apk --print-arch)"; \
     case "$arch" in \

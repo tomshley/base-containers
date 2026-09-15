@@ -8,7 +8,7 @@
 # - no application code
 # - intended for direct consumption by Pekko HTTP services
 
-FROM --platform=$BUILDPLATFORM from_image_build_ref-foundation-runtime-java-21-jdk-openjdk-upstream AS jre-pekko
+FROM --platform=$TARGETPLATFORM from_image_build_ref-foundation-runtime-java-21-jdk-openjdk-upstream AS jre-pekko
 
 RUN apk add --no-cache binutils && \
     jlink \
@@ -26,7 +26,7 @@ jdk.xml.dom,jdk.zipfs \
     --compress=zip-9 \
     --output /javaruntime
 
-FROM --platform=$BUILDPLATFORM from_image_build_ref-base-alpine-3_23-upstream
+FROM --platform=$TARGETPLATFORM from_image_build_ref-base-alpine-3_23-upstream
 
 ENV JAVA_HOME=/opt/java/javaruntime
 ENV PATH="${JAVA_HOME}/bin:${PATH}"

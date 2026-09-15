@@ -14,7 +14,7 @@
 #   2. Record sha256 checksums (from https://ziglang.org/download/index.json)
 #   3. Place in files/ directory
 
-# NOTE: Uses $TARGETPLATFORM (not $BUILDPLATFORM like other entry images)
+# NOTE: Uses $TARGETPLATFORM rather than $BUILDPLATFORM
 # because the Zig binary distribution contains native arch-specific binaries.
 # With $BUILDPLATFORM, cross-builds would install the wrong architecture
 # binary since apk --print-arch reports the build host arch, not target.

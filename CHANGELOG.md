@@ -6,6 +6,23 @@ This project follows Semantic Versioning.
 
 ---
 
+## v0.6.0 — 2026-09-15
+
+### Added
+- Rust 1.98.1 (`entry-rust-1_98-vendored`) and Zig 0.16.0 (`entry-zig-0_16-vendored`) entry images for amd64 and arm64, with vendored archives and SHA256 verification.
+- Corresponding targets in the entry and default Bake groups; existing Rust 1.83 and Zig 0.15 image identities remain available.
+
+### Changed
+- Documented the boundary between reusable entry images, application runtime use-case images, and CI-specific runners.
+- Documented Make-based local and CI builds, including the separate multi-architecture and single-architecture controls.
+
+### Fixed
+- All container stages explicitly use `--platform=$TARGETPLATFORM`, so native binaries and runtime payloads match the architecture requested through Make/Bake.
+- Rust 1.83 now includes `libgcc`, allowing `rustc` and Cargo to start on Alpine.
+- Corrected the publication documentation: `make push` publishes the default Bake group, not experimental targets.
+
+---
+
 ## v0.5.0
 
 ### Added

@@ -7,7 +7,7 @@
 # This image installs repo-vendored HashiCorp release artifacts
 # to ensure reproducibility and stable behavior.
 
-FROM --platform=$BUILDPLATFORM from_image_build_ref
+FROM --platform=$TARGETPLATFORM from_image_build_ref
 
 ENV LANG=C.UTF-8
 

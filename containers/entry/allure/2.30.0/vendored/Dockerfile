@@ -5,7 +5,7 @@
 # NOTE: This container does NOT bundle a JRE. The consuming runner must provide Java.
 # Allure 2.30.0 requires Java 17+ (JDK 21 recommended).
 
-FROM --platform=$BUILDPLATFORM from_image_build_ref
+FROM --platform=$TARGETPLATFORM from_image_build_ref
 
 ENV LANG=C.UTF-8
 
