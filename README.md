@@ -316,7 +316,7 @@ Currently, two jobs are defined:
 
 - **publish-containers** (`deploy` stage, tag-gated via `.flow-artifact-publish`)
   - Runs `make push`
-  - Publishes supported and experimental images to the registry
+  - Publishes supported images from Bake's `default` group to the registry
 
 Additional stages (validate, test, security, etc.) are intentionally present but unused.
 
