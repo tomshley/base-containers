@@ -4,7 +4,7 @@
 # Docker CLI + Buildx + Compose plugins (vendored)
 # Extends entry-docker-cli-29-vendored with build tooling.
 
-FROM --platform=$BUILDPLATFORM from_image_build_ref
+FROM --platform=$TARGETPLATFORM from_image_build_ref
 
 ENV LANG=C.UTF-8
 
