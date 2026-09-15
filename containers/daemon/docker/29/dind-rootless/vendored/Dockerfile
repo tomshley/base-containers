@@ -5,7 +5,7 @@
 # Derived from docker-library/docker (Apache-2.0)
 # https://github.com/docker-library/docker
 
-FROM --platform=$BUILDPLATFORM from_image_build_ref
+FROM --platform=$TARGETPLATFORM from_image_build_ref
 
 # ---- Versions (pin explicitly) ----
 ARG DOCKER_VERSION="29.1.5"

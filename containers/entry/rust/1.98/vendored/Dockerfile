@@ -5,12 +5,12 @@
 # Rust is vendored as a standalone musl-targeted toolchain.
 # We vendor because CI runners must not reach out to the internet
 # for toolchain downloads (reproducibility + air-gap readiness).
-# This image tracks Rust v1.83.x exactly.
+# This image tracks Rust v1.98.x exactly.
 #
 # Vendoring steps:
 #   1. Download from https://static.rust-lang.org/dist/
-#      - rust-1.83.0-x86_64-unknown-linux-musl.tar.xz
-#      - rust-1.83.0-aarch64-unknown-linux-musl.tar.xz
+#      - rust-1.98.1-x86_64-unknown-linux-musl.tar.xz
+#      - rust-1.98.1-aarch64-unknown-linux-musl.tar.xz
 #   2. Record sha256 checksums
 #   3. Place in files/ directory
 
@@ -24,14 +24,14 @@ FROM --platform=$TARGETPLATFORM from_image_build_ref
 ENV LANG=C.UTF-8
 
 # ---- Artifact identity (Rust, upstream musl-targeted standalone installer) ----
-ARG RUST_VERSION="1.83.0"
+ARG RUST_VERSION="1.98.1"
 
 ARG RUST_X64_FILE="rust-${RUST_VERSION}-x86_64-unknown-linux-musl.tar.xz"
 ARG RUST_ARM64_FILE="rust-${RUST_VERSION}-aarch64-unknown-linux-musl.tar.xz"
 
 # ---- Upstream-published SHA256 checksums (recorded at vendoring time) ----
-ARG RUST_X64_SHA256="0afd3628e568861bc5295da728da3d27b1ee8db1ea7d182f7a6f2db789227d9f"
-ARG RUST_ARM64_SHA256="026340facccb5cf2e0aba7f4507add11f1b6d101c7943fcf1c961fca1a935f84"
+ARG RUST_X64_SHA256="2ada47301c1b232e1d98d59bd11df13274ba76ddd07336b90464010cf4644628"
+ARG RUST_ARM64_SHA256="c1dc0f3d12f97a0139ee91010f98002d66927baa210428ea8c68aadcd69bada4"
 
 ARG BINARIES_PREFIX="/opt"
 
@@ -45,7 +45,8 @@ RUN set -eux; \
       ca-certificates \
       coreutils \
       libgcc \
-      musl-dev; \
+      musl-dev \
+      xz; \
     arch="$(apk --print-arch)"; \
     case "$arch" in \
       x86_64)  file="$RUST_X64_FILE";  checksum="$RUST_X64_SHA256" ;; \
@@ -54,7 +55,8 @@ RUN set -eux; \
     esac; \
     echo "$checksum  /tmp/$file" | sha256sum -c -; \
     mkdir -p /tmp/rust-extract; \
-    tar xJf "/tmp/$file" -C /tmp/rust-extract --strip-components=1; \
+    xz -d "/tmp/$file"; \
+    tar xf "/tmp/${file%.xz}" -C /tmp/rust-extract --strip-components=1; \
     /tmp/rust-extract/install.sh --prefix=${BINARIES_PREFIX}/rust --without=rust-docs; \
     rm -rf /tmp/* /var/cache/apk/*
 

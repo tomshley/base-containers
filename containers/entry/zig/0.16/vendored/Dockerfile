@@ -5,12 +5,12 @@
 # Zig is vendored as a pre-built static binary distribution.
 # We vendor because CI runners must not reach out to the internet
 # for toolchain downloads (reproducibility + air-gap readiness).
-# This image tracks Zig v0.15.x exactly.
+# This image tracks Zig v0.16.x exactly.
 #
 # Vendoring steps:
 #   1. Download from https://ziglang.org/download/
-#      - zig-x86_64-linux-0.15.2.tar.xz
-#      - zig-aarch64-linux-0.15.2.tar.xz
+#      - zig-x86_64-linux-0.16.0.tar.xz
+#      - zig-aarch64-linux-0.16.0.tar.xz
 #   2. Record sha256 checksums (from https://ziglang.org/download/index.json)
 #   3. Place in files/ directory
 
@@ -24,14 +24,14 @@ FROM --platform=$TARGETPLATFORM from_image_build_ref
 ENV LANG=C.UTF-8
 
 # ---- Artifact identity (Zig, upstream pre-built binary distribution) ----
-ARG ZIG_VERSION="0.15.2"
+ARG ZIG_VERSION="0.16.0"
 
 ARG ZIG_X64_FILE="zig-x86_64-linux-${ZIG_VERSION}.tar.xz"
 ARG ZIG_ARM64_FILE="zig-aarch64-linux-${ZIG_VERSION}.tar.xz"
 
 # ---- Upstream-published SHA256 checksums (recorded at vendoring time) ----
-ARG ZIG_X64_SHA256="02aa270f183da276e5b5920b1dac44a63f1a49e55050ebde3aecc9eb82f93239"
-ARG ZIG_ARM64_SHA256="958ed7d1e00d0ea76590d27666efbf7a932281b3d7ba0c6b01b0ff26498f667f"
+ARG ZIG_X64_SHA256="70e49664a74374b48b51e6f3fdfbf437f6395d42509050588bd49abe52ba3d00"
+ARG ZIG_ARM64_SHA256="ea4b09bfb22ec6f6c6ceac57ab63efb6b46e17ab08d21f69f3a48b38e1534f17"
 
 ARG BINARIES_PREFIX="/opt"
 

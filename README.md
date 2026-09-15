@@ -50,6 +50,18 @@ There are three orthogonal axes:
 
 These axes are always explicit and never implicit.
 
+### Entry images, use-case images, and CI runners
+
+| Role | Contract | Examples |
+|---|---|---|
+| Entry image | A reusable tool or toolchain, independent of CI workflow policy. | Rust, Zig, sbt, Docker CLI |
+| Use-case image | An application runtime foundation; build-stage compilers and CI automation stay out of its final image. | JRE, Pekko HTTP, Python/Uvicorn |
+| CI runner | A build, test, and publication environment composed from entry images and the CI toolbox in `cicd-pipelines`. | Scala/Rust cross-compilation runner |
+
+A tool being usable in CI does not make its entry image a runner. The runner owns CI workflow integration; the application supplies its own code and lifecycle to a use-case image. The Python/Uvicorn runtime retains virtualenv pip for downstream application dependency installation.
+
+Rust 1.98.1 and Zig 0.16.0 are available as `entry-rust-1_98-vendored` and `entry-zig-0_16-vendored`. The existing Rust 1.83 and Zig 0.15 identities remain available; consumers adopt the newer toolchains explicitly.
+
 ---
 
 ## Registry Access
@@ -171,10 +183,30 @@ VERSION
 
 ## Build System
 
+Use Make for local and CI Docker builds. Make loads the optional environment settings, supplies image tags, and invokes Bake.
+
+Build the configured architectures without publishing:
+
 ```bash
-docker buildx bake
-docker buildx bake --push
+make build
 ```
+
+Build and load a single architecture locally:
+
+```bash
+make build-load LOCAL_PLATFORM=linux/amd64
+make build-load LOCAL_PLATFORM=linux/arm64
+```
+
+Publish through the repository's release flow:
+
+```bash
+make push
+```
+
+`BASE_CONTAINERS_PLATFORMS` controls `build` and `push` and defaults to `linux/amd64,linux/arm64`. `LOCAL_PLATFORM` controls `build-local` and `build-load` and defaults to the host architecture; these targets override the multi-architecture setting.
+
+Image stages use the requested target platform, including stages that produce native JREs or Python virtualenvs for runtime images. Pinning a stage to `BUILDPLATFORM` is appropriate only when it deliberately produces target-compatible output independently of its own architecture.
 
 Bake targets are the authoritative build identities; image tags are aliases of those targets.
 
