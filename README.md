@@ -206,6 +206,8 @@ make push
 
 `BASE_CONTAINERS_PLATFORMS` controls `build` and `push` and defaults to `linux/amd64,linux/arm64`. `LOCAL_PLATFORM` controls `build-local` and `build-load` and defaults to the host architecture; these targets override the multi-architecture setting.
 
+The Buildx builder pins its BuildKit version (`BUILDKIT_VERSION`) rather than tracking a floating tag, because the builder version determines the manifest format published to the registry. `make createbuildx` fails if an existing builder runs a different version; `make recreatebuildx` replaces it.
+
 Image stages use the requested target platform, including stages that produce native JREs or Python virtualenvs for runtime images. Pinning a stage to `BUILDPLATFORM` is appropriate only when it deliberately produces target-compatible output independently of its own architecture.
 
 Bake targets are the authoritative build identities; image tags are aliases of those targets.
