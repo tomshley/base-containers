@@ -42,6 +42,7 @@ COPY files/${RUST_ARM64_FILE} /tmp/
 RUN set -eux; \
     apk add --no-cache \
       bash \
+      build-base \
       ca-certificates \
       coreutils \
       libgcc \
