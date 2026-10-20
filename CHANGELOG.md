@@ -6,6 +6,13 @@ This project follows Semantic Versioning.
 
 ---
 
+## v0.6.1 — 2026-10-19
+
+### Fixed
+- The Rust 1.83 vendored image now carries `build-base`. A musl Rust links every build script, procedural macro, and test through a C compiler driver, so the image could not compile a workspace without one.
+
+---
+
 ## v0.6.0 — 2026-09-15
 
 ### Added
